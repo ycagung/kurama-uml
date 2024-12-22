@@ -1,0 +1,47 @@
+@startuml entity
+
+left to right direction
+title "Project Kurama v0.0.1 - Use Case"
+
+actor "User" as user
+
+package "Account Management" as accountManagement {
+    usecase "Sign Up" as signUp
+    usecase "Sign In" as signIn
+    usecase "Sign Out" as signOut
+}
+
+package "Profile Management" as profileManagement {
+    usecase "Create Profile" as createProfile
+    usecase "View Profile" as readProfile
+    usecase "Edit Profile" as editProfile
+    usecase "Delete Profile" as deleteProfile
+    usecase "Select Active Profile" as selectActiveProfile
+}
+
+package "Contact Management" as contactManagement {
+    usecase "Create Contact" as createContact
+    usecase "View Contact" as viewContact
+    usecase "Edit Contact" as editContact
+    usecase "Block Contact" as blockContact
+}
+
+package "Group Management" as groupManagement {
+    usecase "Create Group" as createGroup
+
+    package "Member Management" as memberManagement {
+        usecase "Add Member" as addMember
+        usecase "View Member" as viewMember
+        usecase "Remove Member" as removeMember
+        usecase "Select Admin" as selectAdmin
+    }
+
+    package "Chat Management" as groupChatManagement {
+        usecase "Create Group Chat" as createGroupChat
+        usecase "Delete Group Chat" as deleteGroupChat
+
+        usecase sendMessage as "Send Message"
+    }
+}
+
+@enduml
