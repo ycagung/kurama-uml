@@ -89,14 +89,14 @@ scheduleAdmin ..> user : <<extends>>
 scheduleMember ..> user : <<extends>>
 
 ' Account Managemenet
-user -down-> accountManagement
+user --down--> accountManagement
 signUp .> signIn : <<extends>>
 
 ' Profile Management
-user -down-> profileManagement
+user --down--> profileManagement
 
 ' Contact Management
-user -down-> contactManagement
+user --down--> contactManagement
 
 ' Group Management
 user -down-> createGroup
@@ -113,7 +113,7 @@ groupMember --up--> editGroupMessage
 groupMember --up--> deleteGroupMessage
 
 ' Personal Chat Management
-user --> personalChatMangement
+user -down-> personalChatMangement
 attachMedia ..> sendMessage : <<includes>>
 attachDocument ..> sendMessage : <<includes>>
 attachSchedule ..> sendMessage : <<includes>>
@@ -121,11 +121,11 @@ deleteAttachment ..> deleteMessage : <<includes>>
 
 ' Schedule Management
 user -down-> createSchedule
-scheduleAdmin --> editSchedule
-scheduleAdmin --> deleteSchedule
-scheduleAdmin --> addScheduleMember
-scheduleAdmin --> removeScheduleMember
-scheduleMember --> viewSchedule
-scheduleMember --> viewSchduleMember
+scheduleAdmin --up--> editSchedule
+scheduleAdmin --up--> deleteSchedule
+scheduleAdmin --up--> addScheduleMember
+scheduleAdmin --up--> removeScheduleMember
+scheduleMember --up--> viewSchedule
+scheduleMember --up--> viewSchduleMember
 
 @enduml
