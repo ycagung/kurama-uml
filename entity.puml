@@ -4,6 +4,10 @@ left to right direction
 title "Project Kurama v0.0.1 - Use Case"
 
 actor "User" as user
+actor "Group Admin" as groupAdmin
+actor "Group Member" as groupMember
+actor "Schedule Member" as scheduleMember
+actor "Schedule Admin" as scheduleAdmin
 
 package "Account Management" as accountManagement {
     usecase "Sign Up" as signUp
@@ -24,24 +28,104 @@ package "Contact Management" as contactManagement {
     usecase "View Contact" as viewContact
     usecase "Edit Contact" as editContact
     usecase "Block Contact" as blockContact
+    usecase "Delete Contect" as deleteContact
 }
 
 package "Group Management" as groupManagement {
     usecase "Create Group" as createGroup
+    usecase "Disband Group" as disbandGroup
 
     package "Member Management" as memberManagement {
-        usecase "Add Member" as addMember
-        usecase "View Member" as viewMember
-        usecase "Remove Member" as removeMember
-        usecase "Select Admin" as selectAdmin
+        usecase "Add Member" as addGroupMember
+        usecase "View Member" as viewGroupMember
+        usecase "Remove Member" as removeGroupMember
+        usecase "Select Admin" as selectGroupAdmin
     }
 
     package "Chat Management" as groupChatManagement {
         usecase "Create Group Chat" as createGroupChat
         usecase "Delete Group Chat" as deleteGroupChat
 
-        usecase sendMessage as "Send Message"
+        usecase "Send Message" as sendGroupMessage
+        usecase "Pin Message" as pinGroupMessage
+        usecase "Edit Message" as editGroupMessage
+        usecase "Delete Message" as deleteGroupMessage
     }
 }
+
+package "Personal Chat Management" as personalChatMangement {
+    usecase "Create Chat" as createChat
+    usecase "Delete Chat" as deleteChat
+
+    usecase "Send Message" as sendMessage
+    usecase "Pin Message" as pinMessage
+    usecase "Edit Message" as editMessage
+    usecase "Delete Message" as deleteMessage
+    
+    package "Attachment Management" as attachmentManagement {
+        usecase "Attach Media" as attachMedia
+        usecase "Attach Document" as attachDocument
+        usecase "Attach Schedule" as attachSchedule
+        usecase "Delete Attachment" as deleteAttachment
+    }
+}
+
+package "Schedule Management" as scheduleManagement { 
+    usecase "Create Schedule" as createSchedule
+    usecase "View Schedule" as viewSchedule
+    usecase "Edit Schedule" as editSchedule
+    usecase "Delete Schedule" as deleteSchedule
+
+    package "Member Management" as scheduleMemberManagement {
+        usecase "Add Member" as addScheduleMember
+        usecase "View Member" as viewSchduleMember
+        usecase "Remove Member" as removeScheduleMember
+    }
+}
+
+groupAdmin ..> user : <<extends>>
+groupMember ..> user : <<extends>>
+scheduleAdmin ..> user : <<extends>>
+scheduleMember ..> user : <<extends>>
+
+' Account Managemenet
+user -down-> accountManagement
+signUp .> signIn : <<extends>>
+
+' Profile Management
+user -down-> profileManagement
+
+' Contact Management
+user -down-> contactManagement
+
+' Group Management
+user -down-> createGroup
+groupAdmin --up--> disbandGroup
+groupAdmin --up--> removeGroupMember
+groupAdmin --up--> addGroupMember
+groupAdmin --up--> selectGroupAdmin
+groupAdmin --up--> createGroupChat
+groupAdmin --up--> deleteGroupChat
+groupAdmin --up--> pinGroupMessage
+groupMember --up--> viewGroupMember
+groupMember --up--> sendGroupMessage
+groupMember --up--> editGroupMessage
+groupMember --up--> deleteGroupMessage
+
+' Personal Chat Management
+user --> personalChatMangement
+attachMedia ..> sendMessage : <<includes>>
+attachDocument ..> sendMessage : <<includes>>
+attachSchedule ..> sendMessage : <<includes>>
+deleteAttachment ..> deleteMessage : <<includes>>
+
+' Schedule Management
+user -down-> createSchedule
+scheduleAdmin --> editSchedule
+scheduleAdmin --> deleteSchedule
+scheduleAdmin --> addScheduleMember
+scheduleAdmin --> removeScheduleMember
+scheduleMember --> viewSchedule
+scheduleMember --> viewSchduleMember
 
 @enduml
