@@ -1,0 +1,178 @@
+@startuml entity
+
+hide circle
+skinparam linetype ortho
+left to right direction
+title "Project Kurama v0.0.1 - Entity Relation Diagram"
+
+entity "account" as account {
+  *id: text
+  --
+	*created_at: timestamp
+  *email: text
+  *phone_number: text
+	*country_id: integer
+	*active_profile_id: integer
+}
+
+entity "Session" as session {
+	*id: serial
+	--
+	*created_at: timestamp
+	*account_id: text
+	*access_token: text
+	*expiry_date: timestamp
+}
+
+entity "Profile" as profile {
+	*id: serial
+	--
+	*created_at: timestamp
+	*account_id: text
+	*first_name: text
+	last_name: text
+	email: text
+	phone_number: text
+	country_id: integer
+	dob: date
+	bio: text
+}
+
+entity "Contact" as contact {
+	*id: serial
+	--
+	*created_at: timestamp
+	*owner_id: integer
+	*contact_id: integer
+	*blocked: boolean
+}
+
+entity "Country" as country {
+	*id: serial
+	--
+	*created_at: timestamp
+	*name: text
+	*phone_code: text,
+	flag_url: text
+}
+
+entity "Group" as group {
+	*id: serial
+	--
+	*created_at: timestamp
+	*name: text
+	img_url: text
+	description: text
+} 
+
+entity "Group Member" as groupMember {
+	*id: serial
+	--
+	*created_at: timestamp
+	*group_id: integer
+	*profile_id: integer
+	*role_id: char(1)
+}
+
+entity "Group Member Role" as groupMemberRole {
+	*id: char(1)
+	--
+	*name: text
+}
+
+entity "Chat" as chat {
+	*id: serial
+	--
+	*created_at: timestamp
+	*chat_type_id: char(1)
+	party_a_id: agung
+	party_b_id: integer
+	group_id: integer
+	name: text
+	img_url: text
+	description: text
+}
+
+entity "Chat Type" as chatType {
+	*id: char(1)
+	--
+	*name: text 
+}
+
+entity "Message" as message {
+	*id: serial
+	--
+	*created_at: timestamp
+	*chat_id: integer
+	*sender_id: integer
+	*receiver_id: integer
+	*status_id: char(1)
+	content: text
+}
+
+entity "Message Status" as messageStatus {
+	*id: char(1)
+	--
+	*name: text
+}
+
+entity "Attachment" as attachment {
+	*id: serial
+	--
+	*message_id: integer
+	*url: text
+}
+
+entity "Schedule" as schedule {
+	*id: serial
+	--
+	*created_at: timestamp
+	*owner_id: integer
+	*title: text
+	*timestamp: timestamp
+	*status_id: char(1)
+	message_id: integer
+}
+
+entity "Schedule Status" as scheduleStatus {
+	*id: char(1)
+	--
+	*name: text
+}
+
+entity "Schedule Member" as scheduleMember {
+	*id: serial
+	--
+	*created_at: timestamp
+	*schedule_id: integer
+	*member_id: integer
+	response: char(1)
+}
+
+entity "Schedule Member Response" as scheduleMemberResponse {
+	*id: char(1)
+	--
+	*name: text
+}
+
+account ||--|{ session
+account ||---|{ profile : Profiles
+account ||---|| profile : Active Profile
+profile ||---o{ contact : Contact Owner
+contact |o---|| profile : Contact
+group ||--|{ groupMember
+profile ||--o{ groupMember
+groupMemberRole ||--|{ groupMember
+group ||--o{ chat
+chatType ||--|{ chat
+chat ||--o{ message
+messageStatus ||--|{ message
+message ||--o| attachment
+schedule ||--o{ scheduleMember
+schedule |o---|| message
+scheduleStatus ||--|{ schedule
+scheduleMemberResponse |o--o{ scheduleMember
+profile ||---o{ chat : Party A
+profile ||---o{ chat : Party B
+country ||--o{ account
+country ||-o{ profile
